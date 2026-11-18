@@ -22,7 +22,7 @@
 <label for="apiKey">کلید API همان سرویس</label>
 <input id="apiKey" type="password" placeholder="کلید API را وارد کن" autocomplete="off">
 <label for="model">شناسه دقیق مدل</label>
-<input id="model" type="text" placeholder="مثلاً gemini-3.8-flash" autocomplete="off" spellcheck="false">
+<input id="model" type="text" placeholder="شناسه مدل فعال در سرویس انتخاب‌شده" autocomplete="off" spellcheck="false">
 <p id="providerHelp" class="muted">مدل‌های در دسترس و شناسه دقیق آن‌ها را در پنل همان سرویس بررسی کن.</p>
 <p class="warning">کلید فقط تا زمان بازبودن همین صفحه در حافظه مرورگر می‌ماند؛ آن را در اختیار دیگران نگذار. استفاده از API ممکن است هزینه داشته باشد و رایگان‌بودن به سهمیه حساب تو بستگی دارد.</p>
 <button id="saveKey">بررسی تکمیل تنظیمات</button> <span id="keyState" class="muted"></span>
@@ -33,8 +33,7 @@
 <div id="pdfInfo" class="muted">هنوز فایلی انتخاب نشده است.</div>
 <label for="style">سبک ترجمه</label>
 <select id="style"><option>ترکیبی حرفه‌ای؛ دقیق و وفادار، در عین حال روان و خوش‌خوان</option><option>دانشگاهی و تخصصی</option><option>روان و عمومی</option></select>
-<label for="chunkPages">حداکثر صفحات هر بخش</label>
-<select id="chunkPages"><option>2</option><option selected>3</option><option>5</option></select>
+<p class="muted">تقسیم‌بندی به‌صورت خودکار انجام می‌شود: ابتدا فصل‌ها شناسایی می‌شوند و سپس هر فصل، بدون بریدن وسط پاراگراف تا حد امکان، به قسمت‌های کوچک‌تر تقسیم و به‌ترتیب ترجمه می‌شود.</p>
 <button id="start" disabled>شروع ترجمه</button>
 <div class="progress"><div id="bar"></div></div><div id="status" class="muted">آماده</div>
 </section>
@@ -46,10 +45,10 @@
 <section class="panel"><h2>نکات مهم</h2><ul>
 <li>PDF باید متنی و قابل انتخاب باشد؛ PDF اسکن‌شده در این نسخه OCR نمی‌شود.</li>
 <li>متن کتاب برای ترجمه به سرویس انتخاب‌شده فرستاده می‌شود.</li>
-<li>برای جلوگیری از درخواست‌های خیلی بزرگ، متن به بخش‌های کوچک تقسیم می‌شود.</li>
+<li>فصل‌ها و قسمت‌های هر فصل به‌صورت خودکار شناسایی و مرتب ترجمه می‌شوند.</li>
 <li>در صورت قطع اینترنت یا تمام‌شدن سهمیه، پردازش متوقف می‌شود؛ این نسخه هنوز ادامه خودکار از نقطه توقف ندارد.</li>
 <li>ترجمه ماشینی را پیش از انتشار با متن اصلی مقابله و ویرایش انسانی کن.</li>
 </ul></section>
-</main><footer>نسخه آزمایشی شخصی · انتخاب چند ارائه‌دهنده هوش مصنوعی</footer>
+</main><footer>BookFlow AI · ترجمه فصل‌به‌فصل و چندبخشی</footer>
 <script src="app.js"></script>
 </body></html>
