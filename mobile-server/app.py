@@ -19,7 +19,7 @@ for folder in (DATA,UPLOADS,OUTPUTS,STATIC): folder.mkdir(parents=True,exist_ok=
 CONFIG: dict[str,dict[str,str]]={}
 PAUSE_FLAGS: dict[str,asyncio.Event]={}
 TASKS: dict[str,asyncio.Task]={}
-CHAPTER_RE=re.compile(r"^\\s*(?:chapter|part|section)\\s+(?:\\d+|[ivxlcdm]+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\\b.*$",re.I)
+CHAPTER_RE=re.compile(r"^\s*(?:chapter|part|section)\s+(?:\d+|[ivxlcdm]+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\b.*$",re.I)
 
 def connect():
     con=sqlite3.connect(DB); con.row_factory=sqlite3.Row; return con
@@ -52,23 +52,23 @@ def pdf_to_text(path):
     doc=fitz.open(path); pages=[]
     for page in doc:
         blocks=page.get_text("blocks",sort=True)
-        text="\\n".join(str(b[4]).strip() for b in blocks if len(b)>4 and str(b[4]).strip())
+        text="\n".join(str(b[4]).strip() for b in blocks if len(b)>4 and str(b[4]).strip())
         if text: pages.append(text)
-    doc.close(); return "\\n\\n".join(pages)
+    doc.close(); return "\n\n".join(pages)
 
 def split_book(text,limit=6000):
-    lines=[x.strip() for x in text.replace("\\r","").split("\\n")]
+    lines=[x.strip() for x in text.replace("\r","").split("\n")]
     heads=[(i,x) for i,x in enumerate(lines) if CHAPTER_RE.match(x)]
-    if not heads: raw=[("متن کتاب","\\n".join(lines))]
+    if not heads: raw=[("متن کتاب","\n".join(lines))]
     else:
         raw=[]
-        if heads[0][0]>0: raw.append(("مقدمه و مطالب آغازین","\\n".join(lines[:heads[0][0]])))
+        if heads[0][0]>0: raw.append(("مقدمه و مطالب آغازین","\n".join(lines[:heads[0][0]])))
         for n,(start,title) in enumerate(heads):
             end=heads[n+1][0] if n+1<len(heads) else len(lines)
-            raw.append((title,"\\n".join(lines[start:end])))
+            raw.append((title,"\n".join(lines[start:end])))
     result=[]
     for title,body in raw:
-        paragraphs=[p.strip() for p in re.split(r"\\n\\s*\\n",body) if p.strip()]
+        paragraphs=[p.strip() for p in re.split(r"\n\s*\n",body) if p.strip()]
         units=[]
         for p in paragraphs:
             while len(p)>limit:
@@ -79,7 +79,7 @@ def split_book(text,limit=6000):
         current=""
         for unit in units:
             if current and len(current)+len(unit)+2>limit: result.append((title,current)); current=unit
-            else: current=(current+"\\n\\n"+unit).strip()
+            else: current=(current+"\n\n"+unit).strip()
         if current: result.append((title,current))
     return result
 
@@ -127,8 +127,8 @@ async def jobs():
 async def job_status(job_id:str): return get_job(job_id)
 
 def make_prompt(source,chapter,seq,style,glossary):
-    glossary_text="\\nواژه‌نامه الزامی:\\n"+glossary+"\\n" if glossary.strip() else ""
-    return ("متن زیر بخشی از یک کتاب انگلیسی است. آن را به فارسی معیار و دقیق ترجمه کن. هیچ جمله، مثال، عدد، ارجاع یا پاراگرافی را حذف یا خلاصه نکن. چیزی از خودت اضافه نکن. عنوان‌ها، فهرست‌ها و شکست پاراگراف‌ها را حفظ کن. نام‌ها و اصطلاحات را در سراسر کتاب یکسان ترجمه کن. فقط متن ترجمه‌شده را برگردان.\\nسبک: "+style+"\\nفصل: "+chapter+" | بخش: "+str(seq)+glossary_text+"\\nمتن مبدأ:\\n"+source)
+    glossary_text="\nواژه‌نامه الزامی:\n"+glossary+"\n" if glossary.strip() else ""
+    return ("متن زیر بخشی از یک کتاب انگلیسی است. آن را به فارسی معیار و دقیق ترجمه کن. هیچ جمله، مثال، عدد، ارجاع یا پاراگرافی را حذف یا خلاصه نکن. چیزی از خودت اضافه نکن. عنوان‌ها، فهرست‌ها و شکست پاراگراف‌ها را حفظ کن. نام‌ها و اصطلاحات را در سراسر کتاب یکسان ترجمه کن. فقط متن ترجمه‌شده را برگردان.\nسبک: "+style+"\nفصل: "+chapter+" | بخش: "+str(seq)+glossary_text+"\nمتن مبدأ:\n"+source)
 
 async def call_provider(cfg,prompt):
     provider,key,model=cfg["provider"],cfg["api_key"],cfg["model"]
@@ -138,7 +138,7 @@ async def call_provider(cfg,prompt):
             r=await client.post(url,params={"key":key},json={"contents":[{"parts":[{"text":prompt}]}],"generationConfig":{"temperature":0.2}})
             data=r.json()
             if r.is_error: raise RuntimeError(data.get("error",{}).get("message","خطای Gemini "+str(r.status_code)))
-            answer="\\n".join(p.get("text","") for p in data.get("candidates",[{}])[0].get("content",{}).get("parts",[])).strip()
+            answer="\n".join(p.get("text","") for p in data.get("candidates",[{}])[0].get("content",{}).get("parts",[])).strip()
         else:
             urls={"openai":"https://api.openai.com/v1/chat/completions","xai":"https://api.x.ai/v1/chat/completions","openrouter":"https://openrouter.ai/api/v1/chat/completions"}
             headers={"Authorization":"Bearer "+key,"Content-Type":"application/json"}
@@ -147,7 +147,7 @@ async def call_provider(cfg,prompt):
             data=r.json()
             if r.is_error: raise RuntimeError(data.get("error",{}).get("message","خطای سرویس "+str(r.status_code)))
             answer=data.get("choices",[{}])[0].get("message",{}).get("content","")
-            if isinstance(answer,list): answer="\\n".join(x.get("text","") for x in answer if isinstance(x,dict))
+            if isinstance(answer,list): answer="\n".join(x.get("text","") for x in answer if isinstance(x,dict))
             answer=str(answer).strip()
     if not answer: raise RuntimeError("پاسخ خالی از مدل دریافت شد.")
     return answer
@@ -176,6 +176,9 @@ async def translation_worker(job_id):
                 con.execute("UPDATE chunks SET translation=?,status='done' WHERE id=?",(translated,row["id"]))
                 done=con.execute("SELECT COUNT(*) FROM chunks WHERE job_id=? AND status='done'",(job_id,)).fetchone()[0]
                 con.execute("UPDATE jobs SET completed=?,status='running',error='' WHERE id=?",(done,job_id))
+            if not PAUSE_FLAGS[job_id].is_set():
+                with connect() as con: con.execute("UPDATE jobs SET status='paused' WHERE id=?",(job_id,))
+                return
     except asyncio.CancelledError:
         with connect() as con: con.execute("UPDATE jobs SET status='paused' WHERE id=?",(job_id,))
         raise
@@ -212,7 +215,7 @@ async def download_docx(job_id:str):
     doc=Document()
     for row in rows:
         h=doc.add_paragraph(); rtl_paragraph(h); r=h.add_run(row["chapter"]); r.bold=True; rtl_run(r)
-        for text in re.split(r"\\n\\s*\\n",row["translation"]):
+        for text in re.split(r"\n\s*\n",row["translation"]):
             if text.strip():
                 p=doc.add_paragraph(); rtl_paragraph(p); rr=p.add_run(text.strip()); rtl_run(rr)
     output=OUTPUTS/(job_id+"-fa.docx"); doc.save(output)
@@ -223,7 +226,7 @@ async def health(): return {"ok":True,"version":"2.0.0"}
 
 if __name__=="__main__":
     import uvicorn
-    print("\\nBookFlow AI 2")
+    print("\nBookFlow AI 2")
     print("Laptop: http://127.0.0.1:8000")
-    print("Phone (same Wi-Fi): http://"+local_ip()+":8000\\n")
+    print("Phone (same Wi-Fi): http://"+local_ip()+":8000\n")
     uvicorn.run(app,host="0.0.0.0",port=8000)
