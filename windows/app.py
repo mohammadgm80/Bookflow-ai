@@ -128,7 +128,7 @@ with st.sidebar:
     st.header("تنظیمات موتور هوش مصنوعی")
     api_key=st.text_input("Gemini API Key",type="password",
         help="کلید را در Google AI Studio بسازید. این برنامه آن را در پایگاه داده ذخیره نمی‌کند.")
-    model=st.text_input("نام مدل",value="gemini-2.5-flash")
+    model=st.text_input("نام مدل",value="gemini-3.1-flash-lite")
     st.caption("دسترسی رایگان و سهمیه مدل‌ها ممکن است تغییر کند؛ سقف مصرف را در AI Studio بررسی کنید.")
     st.divider()
     st.caption("متن کتاب برای ترجمه به Gemini ارسال می‌شود. فایل‌ها و خروجی‌ها محلی ذخیره می‌شوند.")
