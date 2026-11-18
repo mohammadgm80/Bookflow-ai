@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172554">
+<title>BookFlow AI 2</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header><div class="brand">📚 BookFlow AI <span>2</span></div><p>سامانه ترجمه کتاب‌های انگلیسی به فارسی</p></header>
+<main>
+<section class="panel">
+<h2>۱. انتخاب کتاب</h2>
+<input id="pdf" type="file" accept="application/pdf">
+<button id="upload">بارگذاری و بررسی PDF</button>
+<p id="fileInfo" class="muted">فایل PDF متنی انتخاب کن.</p>
+</section>
+<section class="panel">
+<h2>۲. تنظیم موتور ترجمه</h2>
+<label>ارائه‌دهنده</label>
+<select id="provider">
+<option value="gemini">Google Gemini</option><option value="openai">OpenAI</option>
+<option value="xai">xAI / Grok</option><option value="openrouter">OpenRouter</option>
+</select>
+<label>شناسه دقیق مدل</label><input id="model" placeholder="شناسه مدل فعال در سرویس">
+<label>کلید API</label><input id="key" type="password" autocomplete="off" placeholder="کلید را اینجا وارد کن">
+<label>سبک ترجمه</label>
+<select id="style"><option>ترجمه دانشگاهی دقیق و روان</option><option>وفادار به متن و رسمی</option><option>روان و قابل‌فهم برای مخاطب عمومی</option></select>
+<label>واژه‌نامه اختصاصی (اختیاری)</label>
+<textarea id="glossary" rows="3" placeholder="مثال: Regional Studies = مطالعات منطقه‌ای"></textarea>
+<p class="notice">کلید API فقط در حافظه موقت برنامه نگهداری می‌شود و در فایل یا پایگاه داده ذخیره نمی‌شود. آن را در شبکه عمومی وارد نکن.</p>
+</section>
+<section class="panel">
+<h2>۳. ترجمه و پیشرفت</h2>
+<div id="jobInfo" class="muted">هنوز کتابی بارگذاری نشده است.</div>
+<div class="progress"><div id="bar"></div></div>
+<p id="status" class="muted">آماده</p>
+<div class="actions">
+<button id="start" disabled>شروع ترجمه</button>
+<button id="pause" class="secondary" disabled>توقف موقت</button>
+<button id="resume" class="secondary" disabled>ادامه ترجمه</button>
+</div>
+<button id="download" disabled>دریافت فایل Word فارسی</button>
+</section>
+<section class="panel">
+<h2>کتاب‌های قبلی</h2><div id="history" class="muted">در حال دریافت فهرست...</div>
+</section>
+<section class="panel">
+<h2>نکات نسخه آزمایشی</h2>
+<ul>
+<li>PDF باید متن قابل انتخاب داشته باشد؛ OCR فایل اسکن‌شده هنوز در این نسخه فعال نیست.</li>
+<li>فصل‌ها و بخش‌ها خودکار شناسایی و ترجمه می‌شوند.</li>
+<li>هر بخش پس از ترجمه ذخیره می‌شود؛ پس از قطع کار می‌توانی ادامه بدهی.</li>
+<li>این نسخه برای استفاده شخصی در شبکه محلی است؛ آن را روی اینترنت عمومی منتشر نکن.</li>
+<li>ترجمه ماشینی باید پیش از استفاده علمی یا انتشار، بازبینی انسانی شود.</li>
+</ul>
+</section>
+</main>
+<footer>BookFlow AI 2 · نسخه آزمایشی موبایل‌پسند</footer>
+<script src="/static/app.js"></script>
+</body></html>
