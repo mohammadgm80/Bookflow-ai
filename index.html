@@ -11,21 +11,30 @@
 <header><div class="brand">📚 BookFlow AI</div><small>دستیار ترجمه و ویراستاری کتاب</small></header>
 <main>
 <section class="panel">
-<h2>۱. تنظیم اتصال Gemini</h2>
-<label>کلید API گوگل (فقط روی همین دستگاه وارد کن)</label>
-<input id="apiKey" type="password" placeholder="API Key را اینجا وارد کن" autocomplete="off">
-<label>مدل Gemini</label>
-<select id="model"><option value="gemini-3.8-flash">Gemini 3.8 Flash</option></select>
-<p class="warning">این نسخه آزمایشی کلید را در حافظه همین مرورگر نگه می‌دارد و آن را به فایل پروژه نمی‌نویسد. این روش برای استفاده شخصی است؛ کلید را با کسی به اشتراک نگذار.</p>
-<button id="saveKey">ذخیره موقت کلید</button><span id="keyState" class="muted"></span>
+<h2>۱. انتخاب سرویس هوش مصنوعی</h2>
+<label for="provider">ارائه‌دهنده</label>
+<select id="provider">
+<option value="gemini">Google Gemini</option>
+<option value="openai">OpenAI (GPT)</option>
+<option value="xai">xAI (Grok)</option>
+<option value="openrouter">OpenRouter (مدل‌های متنوع)</option>
+</select>
+<label for="apiKey">کلید API همان سرویس</label>
+<input id="apiKey" type="password" placeholder="کلید API را وارد کن" autocomplete="off">
+<label for="model">شناسه دقیق مدل</label>
+<input id="model" type="text" placeholder="مثلاً gemini-3.8-flash" autocomplete="off" spellcheck="false">
+<p id="providerHelp" class="muted">مدل‌های در دسترس و شناسه دقیق آن‌ها را در پنل همان سرویس بررسی کن.</p>
+<p class="warning">کلید فقط تا زمان بازبودن همین صفحه در حافظه مرورگر می‌ماند؛ آن را در اختیار دیگران نگذار. استفاده از API ممکن است هزینه داشته باشد و رایگان‌بودن به سهمیه حساب تو بستگی دارد.</p>
+<button id="saveKey">بررسی تکمیل تنظیمات</button> <span id="keyState" class="muted"></span>
 </section>
 <section class="panel">
 <h2>۲. انتخاب PDF انگلیسی</h2>
 <input id="pdfFile" type="file" accept="application/pdf">
 <div id="pdfInfo" class="muted">هنوز فایلی انتخاب نشده است.</div>
-<label>سبک ترجمه</label>
+<label for="style">سبک ترجمه</label>
 <select id="style"><option>ترکیبی حرفه‌ای؛ دقیق و وفادار، در عین حال روان و خوش‌خوان</option><option>دانشگاهی و تخصصی</option><option>روان و عمومی</option></select>
-<label>حداکثر صفحات هر بخش</label><select id="chunkPages"><option>2</option><option selected>3</option><option>5</option></select>
+<label for="chunkPages">حداکثر صفحات هر بخش</label>
+<select id="chunkPages"><option>2</option><option selected>3</option><option>5</option></select>
 <button id="start" disabled>شروع ترجمه</button>
 <div class="progress"><div id="bar"></div></div><div id="status" class="muted">آماده</div>
 </section>
@@ -36,10 +45,11 @@
 </section>
 <section class="panel"><h2>نکات مهم</h2><ul>
 <li>PDF باید متنی و قابل انتخاب باشد؛ PDF اسکن‌شده در این نسخه OCR نمی‌شود.</li>
+<li>متن کتاب برای ترجمه به سرویس انتخاب‌شده فرستاده می‌شود.</li>
 <li>برای جلوگیری از درخواست‌های خیلی بزرگ، متن به بخش‌های کوچک تقسیم می‌شود.</li>
+<li>در صورت قطع اینترنت یا تمام‌شدن سهمیه، پردازش متوقف می‌شود؛ این نسخه هنوز ادامه خودکار از نقطه توقف ندارد.</li>
 <li>ترجمه ماشینی را پیش از انتشار با متن اصلی مقابله و ویرایش انسانی کن.</li>
-<li>در صورت قطع اینترنت یا تمام‌شدن سهمیه، پردازش متوقف می‌شود؛ این نسخه فعلاً ادامه خودکار از نقطه توقف ندارد.</li>
 </ul></section>
-</main><footer>نسخه آزمایشی شخصی · پردازش در مرورگر و سرویس Gemini</footer>
+</main><footer>نسخه آزمایشی شخصی · انتخاب چند ارائه‌دهنده هوش مصنوعی</footer>
 <script src="app.js"></script>
 </body></html>
