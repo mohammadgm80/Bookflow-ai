@@ -1,6 +1,6 @@
 from __future__ import annotations
 import asyncio, re, socket, sqlite3, uuid
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, contextmanager
 from pathlib import Path
 from typing import Any
 import fitz, httpx
@@ -21,8 +21,18 @@ PAUSE_FLAGS: dict[str,asyncio.Event]={}
 TASKS: dict[str,asyncio.Task]={}
 CHAPTER_RE=re.compile(r"^\s*(?:chapter|part|section)\s+(?:\d+|[ivxlcdm]+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\b.*$",re.I)
 
+@contextmanager
 def connect():
-    con=sqlite3.connect(DB); con.row_factory=sqlite3.Row; return con
+    con=sqlite3.connect(DB)
+    con.row_factory=sqlite3.Row
+    try:
+        yield con
+        con.commit()
+    except Exception:
+        con.rollback()
+        raise
+    finally:
+        con.close()
 
 def init_db():
     with connect() as con:
@@ -187,9 +197,14 @@ async def translation_worker(job_id):
 async def start_job(job_id:str,request:StartRequest):
     job=get_job(job_id)
     if job["status"]=="completed": raise HTTPException(409,"این کتاب قبلاً ترجمه شده است.")
-    CONFIG[job_id]=request.model_dump(); PAUSE_FLAGS[job_id]=asyncio.Event(); PAUSE_FLAGS[job_id].set()
+    CONFIG[job_id]=request.model_dump()
     with connect() as con: con.execute("UPDATE jobs SET status='running',error='' WHERE id=?",(job_id,))
-    if job_id not in TASKS or TASKS[job_id].done(): TASKS[job_id]=asyncio.create_task(translation_worker(job_id))
+    if job_id in TASKS and not TASKS[job_id].done():
+        PAUSE_FLAGS.setdefault(job_id,asyncio.Event()).set()
+    else:
+        PAUSE_FLAGS[job_id]=asyncio.Event()
+        PAUSE_FLAGS[job_id].set()
+        TASKS[job_id]=asyncio.create_task(translation_worker(job_id))
     return {"ok":True,"message":"ترجمه شروع شد."}
 
 @app.post("/api/jobs/{job_id}/pause")
