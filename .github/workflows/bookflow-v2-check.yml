@@ -1,0 +1,27 @@
+name: BookFlow AI 2 checks
+on:
+  push:
+    branches: [bookflow-v2]
+    paths:
+      - "mobile-server/**"
+      - ".github/workflows/bookflow-v2-check.yml"
+  pull_request:
+    branches: [bookflow-v2]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r mobile-server/requirements.txt
+      - name: Compile Python files
+        run: python -m compileall -q mobile-server
+      - name: Check chapter splitting
+        working-directory: mobile-server
+        run: |
+          python -c "from app import split_book; x=split_book('Preface text.\n\nChapter 1: Intro\n\nA paragraph for testing.'); assert len(x) >= 2; print('BookFlow core checks passed')"
