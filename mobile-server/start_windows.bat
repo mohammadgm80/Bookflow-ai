@@ -7,7 +7,12 @@ if errorlevel 1 (
   pause
   exit /b 1
 )
-py -3 -m venv .venv
+py -3.11 -m venv .venv
+if errorlevel 1 (
+  echo Python 3.11 was not found. Install Python 3.11 or newer and try again.
+  pause
+  exit /b 1
+)
 call .venv\Scripts\activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
