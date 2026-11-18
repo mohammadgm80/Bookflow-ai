@@ -10,10 +10,10 @@ const providerHints={
  openrouter:"OpenRouter از Chat Completions API استفاده می‌کند. شناسه مدل معمولاً به شکل provider/model است؛ مثل نام‌هایی که در فهرست مدل‌های OpenRouter می‌بینی."
 };
 const modelExamples={
- gemini:"مثلاً gemini-3.8-flash",
+ gemini:"شناسه مدل فعال در Google AI Studio",
  openai:"شناسه مدل فعال در حساب OpenAI",
- xai:"شناسه مدل فعال در xAI، مثلاً grok-4.7",
- openrouter:"شناسه کامل مدل، مثلاً openai/model-name"
+ xai:"شناسه دقیق مدل فعال در حساب xAI",
+ openrouter:"شناسه کامل مدل، مانند provider/model"
 };
 function updateProviderHelp(){
  const p=$("provider").value;
