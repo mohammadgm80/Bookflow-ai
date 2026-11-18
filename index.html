@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#172554"><link rel="manifest" href="manifest.json">
+<title>BookFlow AI</title><link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.min.js"></script>
+</head>
+<body>
+<header><div class="brand">📚 BookFlow AI</div><small>دستیار ترجمه و ویراستاری کتاب</small></header>
+<main>
+<section class="panel">
+<h2>۱. تنظیم اتصال Gemini</h2>
+<label>کلید API گوگل (فقط روی همین دستگاه وارد کن)</label>
+<input id="apiKey" type="password" placeholder="API Key را اینجا وارد کن" autocomplete="off">
+<label>مدل Gemini</label>
+<select id="model"><option value="gemini-2.5-flash">Gemini 2.5 Flash</option></select>
+<p class="warning">این نسخه آزمایشی کلید را در حافظه همین مرورگر نگه می‌دارد و آن را به فایل پروژه نمی‌نویسد. این روش برای استفاده شخصی است؛ کلید را با کسی به اشتراک نگذار.</p>
+<button id="saveKey">ذخیره موقت کلید</button><span id="keyState" class="muted"></span>
+</section>
+<section class="panel">
+<h2>۲. انتخاب PDF انگلیسی</h2>
+<input id="pdfFile" type="file" accept="application/pdf">
+<div id="pdfInfo" class="muted">هنوز فایلی انتخاب نشده است.</div>
+<label>سبک ترجمه</label>
+<select id="style"><option>ترکیبی حرفه‌ای؛ دقیق و وفادار، در عین حال روان و خوش‌خوان</option><option>دانشگاهی و تخصصی</option><option>روان و عمومی</option></select>
+<label>حداکثر صفحات هر بخش</label><select id="chunkPages"><option>2</option><option selected>3</option><option>5</option></select>
+<button id="start" disabled>شروع ترجمه</button>
+<div class="progress"><div id="bar"></div></div><div id="status" class="muted">آماده</div>
+</section>
+<section class="panel">
+<h2>۳. خروجی</h2>
+<div id="resultInfo" class="muted">پس از ترجمه، فایل Word ساخته می‌شود.</div>
+<button id="download" disabled>دریافت فایل Word</button>
+</section>
+<section class="panel"><h2>نکات مهم</h2><ul>
+<li>PDF باید متنی و قابل انتخاب باشد؛ PDF اسکن‌شده در این نسخه OCR نمی‌شود.</li>
+<li>برای جلوگیری از درخواست‌های خیلی بزرگ، متن به بخش‌های کوچک تقسیم می‌شود.</li>
+<li>ترجمه ماشینی را پیش از انتشار با متن اصلی مقابله و ویرایش انسانی کن.</li>
+<li>در صورت قطع اینترنت یا تمام‌شدن سهمیه، پردازش متوقف می‌شود؛ این نسخه فعلاً ادامه خودکار از نقطه توقف ندارد.</li>
+</ul></section>
+</main><footer>نسخه آزمایشی شخصی · پردازش در مرورگر و سرویس Gemini</footer>
+<script src="app.js"></script>
+</body></html>
